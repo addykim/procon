@@ -1,8 +1,26 @@
 import DS from 'ember-data';
 
-export default DS.Model.extend({
-  category: DS.attr('string'),
-  description: DS.attr('string'),
-  weight: DS.attr('number'),
-  rating: DS.attr('number')
+var Item = DS.Model.extend({
+  title: DS.attr('string'),
+  category: DS.attr('string')
 });
+
+Item.reopenClass({
+  FIXTURES: [
+  {
+  	id: 1,
+  	title: "yes",
+  	category: "pro"
+  }, {
+	id: 2,		
+  	title: "yes",
+  	category: "pro"
+  }, {
+	id: 1,
+  	title: "yes",
+  	category: "pro"
+  }
+  ]
+});
+
+export default Item;
