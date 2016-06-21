@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Procon</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    {{content-for "head"}}
+
+    <link rel="stylesheet" href="assets/vendor.css">
+    <link rel="stylesheet" href="assets/procon.css">
+
+    {{content-for "head-footer"}}
+  </head>
+  <body>
+    {{content-for "body"}}
+
+    <script src="assets/vendor.js"></script>
+    <script src="assets/procon.js"></script>
+
+    {{content-for "body-footer"}}
+
+    <script src="https://www.gstatic.com/firebasejs/live/3.0/firebase.js"></script>
+    <script>
+    // Initialize Firebase
+    var config = {
+      apiKey: "AIzaSyCZeWE7q7qW9mAN0DbRu3T2vrgXQ-ScsvI",
+      authDomain: "procon-65198.firebaseapp.com",
+      databaseURL: "https://procon-65198.firebaseio.com",
+      storageBucket: "procon-65198.appspot.com",
+    };
+    firebase.initializeApp(config);
+    </script>
+  </body>
+</html>
