@@ -1,6 +1,7 @@
 {
   "name": "procon",
   "dependencies": {
-    "firebase": "^3.0.0"
+    "firebase": "^3.0.0",
+    "reactfire": "^1.0.0"
   }
 }
