@@ -1,16 +1,8 @@
 var Item = React.createClass({
-  rawMarkup: function() {
-    var md = new Remarkable();
-    var rawMarkup = md.render(this.props.children.toString());
-    return { __html: rawMarkup };
-  },
-
   render: function() {
     return (
-      <div className="">
-        <h2 className="">
-        </h2>
-        <span dangerouslySetInnerHTML={this.rawMarkup()} />
+      <div className="item">
+        <p>{this.props.weight}   <b>{this.props.author}</b> {this.props.text}</p>
       </div>
     );
   }
@@ -62,7 +54,7 @@ var ProsAndCons = React.createClass({
   render: function() {
     return (
       <div className="">
-        <Form onCommentSubmit={this.handleItemSubmit} />
+        <Form onItemSubmit={this.handleItemSubmit} />
         <List data={this.state.data} />
       </div>
     );
@@ -71,24 +63,24 @@ var ProsAndCons = React.createClass({
 
 var List = React.createClass({
   render: function() {
-  	var pros = []
-  	var cons = []
+  	var pros = [];
+  	var cons = [];
+  	var uncategorized = [];
 		this.props.data.forEach(function(item) {
-  	  if (item.category === 'pro') {
-        pros.push(
-        	<Item author={item.author} key={item.id}>
-        		{item.author}:
-        		{item.text}
-        	</Item>
-        	);
-      } else if (item.category === 'con') {
-      	cons.push(
-        	<Item author={item.author} key={item.id}>
-        		{item.author}:
- 						{item.text}
-        	</Item>
-        	);
+			var singleItem = <Item 
+        		key={item.id}
+        		author={item.author}
+        		text={item.text}
+        		weight={item.weight}
+        	/>;
+    	if (item.category === "pro") {
+    		pros.push(singleItem);
       }
+  		else if (item.category === "con") {
+  			cons.push(singleItem);
+      }
+			else
+				uncategorized.push(singleItem);
     });
     return (
       <div className="">
@@ -96,6 +88,8 @@ var List = React.createClass({
         {pros}
       <h3>Con</h3>
       	{cons}
+    	<h3>Uncategorized</h3>
+    		{uncategorized}
       </div>
     );
   }
@@ -105,35 +99,52 @@ var Form = React.createClass({
   getInitialState: function() {
     return {category: '', author: '', text: '', weight: 0};
   },
+  handleCategoryChange: function(e) {
+  	this.setState({category: e.target.value});
+  },
   handleAuthorChange: function(e) {
     this.setState({author: e.target.value});
   },
   handleTextChange: function(e) {
     this.setState({text: e.target.value});
   },
+  handleWeightChange: function(e) {
+  	this.setState({weight: e.target.value});
+  },
   handleSubmit: function(e) {
     e.preventDefault();
+    var category = this.state.category;
     var author = this.state.author.trim();
     var text = this.state.text.trim();
+    var weight = this.state.weight;
     if (!text || !author) {
       return;
     }
-    this.props.onItemSubmit({author: author, text: text});
-    this.setState({author: '', text: ''});
+    this.props.onItemSubmit({
+    	category: category, 
+    	author: author, 
+    	text: text, 
+    	weight: weight
+    	});
+    this.setState({category: '', author: '', text: '', weight: 0});
   },
   render: function() {
     return (
       <form className="" onSubmit={this.handleSubmit}>
-      	<input 
-      		type="checkbox" 
-      		name={this.state.category} 
-      		value="pro"
-    		/> Pro
-    		<input 
-      		type="checkbox" 
-      		name={this.state.category} 
-      		value="con"
-    		/> Con
+        Pro 
+        <input 
+          type="radio"
+          name="category"
+          value="pro"
+          onChange={this.handleCategoryChange}
+        />
+        Con 
+        <input
+          type="radio"
+          name="category"
+          value="con"
+          onChange={this.handleCategoryChange}
+        />
         <input
           type="text"
           placeholder="Your name"
@@ -146,6 +157,11 @@ var Form = React.createClass({
           value={this.state.text}
           onChange={this.handleTextChange}
         />
+        <input
+        	type="number"
+        	value={this.state.weight}
+        	onChange={this.handleWeightChange}
+      	/>
         <input type="submit" value="Post" />
       </form>
     );

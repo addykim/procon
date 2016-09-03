@@ -3,40 +3,35 @@
         "id": 1388534400000,
         "category": "con",
         "author": "Addy Kim",
-        "weight": 3,
-        "text": "Got to learn someting new"
+        "text": "Got to learn someting new",
+        "weight": 3
     },
     {
         "id": 1388534400001,
         "category": "pro",
         "author": "Addy Kim",
-        "weight": 2,
-        "text": "It's apparently easy"
+        "text": "It's apparently easy",
+        "weight": 2
     },
     {
         "id": 1388534400002,
         "category": "pro",
         "author": "Meowgan",
-        "weight": 5,
-        "text": "Meows"
+        "text": "Meows",
+        "weight": 5
     },
     {
         "id": 1388534400003,
         "category": "pro",
         "author": "Jason Wu",
-        "weight": 3,
-        "text": "Quit work"
+        "text": "Quit work",
+        "weight": 3
     },
     {
         "id": 1388534400004,
         "category": "con",
         "author": "Jason Wu",
-        "weight": 2,
-        "text": "No monies :("
-    },
-    {
-        "id": 1472886174639,
-        "author": "Jason Wu",
-        "text": "Noewjow"
+        "text": "No monies :(",
+        "weight": 2
     }
 ]

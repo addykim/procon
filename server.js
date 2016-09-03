@@ -16,7 +16,7 @@ var express = require('express');
 var bodyParser = require('body-parser');
 var app = express();
 
-var COMMENTS_FILE = path.join(__dirname, 'items.json');
+var ITEMS_FILE = path.join(__dirname, 'items.json');
 
 app.set('port', (process.env.PORT || 3000));
 
@@ -30,13 +30,13 @@ app.use(function(req, res, next) {
     // an API server in conjunction with something like webpack-dev-server.
     res.setHeader('Access-Control-Allow-Origin', '*');
 
-    // Disable caching so we'll always get the latest comments.
+    // Disable caching so we'll always get the latest items.
     res.setHeader('Cache-Control', 'no-cache');
     next();
 });
 
 app.get('/api/items', function(req, res) {
-  fs.readFile(COMMENTS_FILE, function(err, data) {
+  fs.readFile(ITEMS_FILE, function(err, data) {
     if (err) {
       console.error(err);
       process.exit(1);
@@ -46,27 +46,29 @@ app.get('/api/items', function(req, res) {
 });
 
 app.post('/api/items', function(req, res) {
-  fs.readFile(COMMENTS_FILE, function(err, data) {
+  fs.readFile(ITEMS_FILE, function(err, data) {
     if (err) {
       console.error(err);
       process.exit(1);
     }
-    var comments = JSON.parse(data);
+    var items = JSON.parse(data);
     // NOTE: In a real implementation, we would likely rely on a database or
     // some other approach (e.g. UUIDs) to ensure a globally unique id. We'll
     // treat Date.now() as unique-enough for our purposes.
-    var newComment = {
+    var newItem = {
       id: Date.now(),
+      category: req.body.category,
       author: req.body.author,
       text: req.body.text,
+      weight: req.body.weight
     };
-    comments.push(newComment);
-    fs.writeFile(COMMENTS_FILE, JSON.stringify(comments, null, 4), function(err) {
+    items.push(newItem);
+    fs.writeFile(ITEMS_FILE, JSON.stringify(items, null, 4), function(err) {
       if (err) {
         console.error(err);
         process.exit(1);
       }
-      res.json(comments);
+      res.json(items);
     });
   });
 });
