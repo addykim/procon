@@ -1,19 +1,8 @@
-/**
- * This file provided by Facebook is for non-commercial testing and evaluation
- * purposes only. Facebook reserves all rights not expressly granted.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
- * FACEBOOK BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN
- * ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
- * WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
- */
-
 var fs = require('fs');
 var path = require('path');
 var express = require('express');
 var bodyParser = require('body-parser');
+var less = require('less');
 var app = express();
 
 var ITEMS_FILE = path.join(__dirname, 'items.json');
@@ -73,6 +62,28 @@ app.post('/api/items', function(req, res) {
   });
 });
 
+var options = {
+    paths         : ["public/less"],        // .less file search paths
+    outputDir     : "/public/css",           // output directory, note the '/'
+    optimization  : 1,                      // optimization level, higher is better but more volatile - 1 is a good value
+    filename      : "public/less/style.less",           // root .less file
+    compress      : true,                   // compress?
+    yuicompress   : true                    // use YUI compressor?
+  };
+
+fs.readFile('public/less/style.less', function(err, lessInput) {
+  less.render(lessInput.toString(), options)
+      .then(function(output) {
+          // output.css = string of css
+          // output.map = string of sourcemap
+          // output.imports = array of string filenames of the imports referenced
+          fs.writeFile('public/css/style.css', output.css);
+      },
+      function(error) {
+        console.error("ERROR:\n" + error);
+      });
+
+});
 
 app.listen(app.get('port'), function() {
   console.log('Server started: http://localhost:' + app.get('port') + '/');

@@ -1,9 +1,22 @@
+var dragging;
 var Item = React.createClass({
+  onDragStart: function(e) {
+    dragging = e.currentTarget;
+    // dragging.parentNode.removeChild(e.target);
+    console.log("Dragging");
+    // debugger;
+  },
+  onDragEnd: function(e) {
+    console.log("On drag end");
+  },
+  onDrop: function(e) {
+    console.log("Dropped");
+  },
   render: function() {
     return (
-      <div className="item">
-        <p>{this.props.weight}   <b>{this.props.author}</b> {this.props.text}</p>
-      </div>
+      <li className="item" draggable="true" onDragStart={this.onDragStart} onDrop={this.onDrop}>
+        <p>{this.props.weight}    {this.props.text}</p>
+      </li>
     );
   }
 });
@@ -54,21 +67,27 @@ var ProsAndCons = React.createClass({
   render: function() {
     return (
       <div className="">
-        <Form onItemSubmit={this.handleItemSubmit} />
-        <List data={this.state.data} />
+        <Form onItemSubmit={this.handleItemSubmit}/>
+        <List data={this.state.data}/>
       </div>
     );
-  }
+  } 
 });
 
 var List = React.createClass({
+  onDrop: function(e) { 
+    e.preventDefault();
+    e.target.appendChild(dragging);
+  },
   render: function() {
   	var pros = [];
   	var cons = [];
   	var uncategorized = [];
 		this.props.data.forEach(function(item) {
-			var singleItem = <Item 
+			var singleItem = 
+          <Item 
         		key={item.id}
+            category={item.category}
         		author={item.author}
         		text={item.text}
         		weight={item.weight}
@@ -83,13 +102,19 @@ var List = React.createClass({
 				uncategorized.push(singleItem);
     });
     return (
-      <div className="">
-      <h3>Pro</h3>
-        {pros}
-      <h3>Con</h3>
-      	{cons}
-    	<h3>Uncategorized</h3>
-    		{uncategorized}
+      <div>
+        <ul id="pros-list" className="item-list">
+          <h3 id="pro-header">Pro</h3>
+          {pros}
+        </ul>
+        <ul id="cons-list" className="item-list">
+          <h3 id="pro-header">Pro</h3>
+          {cons}
+        </ul>
+        <ul id="uncategorized-list" className="item-list">
+          <h3 id="pro-header">Pro</h3>
+          {uncategorized}
+        </ul>
       </div>
     );
   }
