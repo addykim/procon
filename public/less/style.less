@@ -1,8 +1,23 @@
 
 @white:#ffffff;
 @green:#7fff7f;
-@red:#dddddd;
+@red:#ff0000;
+@grey:#dddddd;
 
+@list-width: 33%;
+@item-corner:20%;
+
+.item-list {
+	display:inline-block;
+	vertical-align:top;
+	width:@list-width;
+	& > *  {
+		display:block;
+	}
+}
+.item-box {
+	border-radius:@item-corner;
+}
 .category-header {
 	color:@white;
 }
@@ -13,4 +28,6 @@
 #con-header {
 	background-color:@red;
 }
-
+#uncategorized-header {
+	background-color:@grey;
+}
