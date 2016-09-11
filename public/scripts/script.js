@@ -1,20 +1,18 @@
 var dragging;
 var Item = React.createClass({
-  onDragStart: function(e) {
-    dragging = e.currentTarget;
-    // dragging.parentNode.removeChild(e.target);
-    console.log("Dragging");
+  dragStartHandler: function(e) {
+    console.log("Start drag" + e);
+    // e. preventDefault();
     // debugger;
+    console.log("Target id:" + e.target.id);
+    e.dataTransfer.dropEffect = "move";
   },
-  onDragEnd: function(e) {
-    console.log("On drag end");
-  },
-  onDrop: function(e) {
-    console.log("Dropped");
+  dragEndHandler: function(e) {
+    console.log("Drag end");
   },
   render: function() {
     return (
-      <li className="item" draggable="true" onDragStart={this.onDragStart} onDrop={this.onDrop}>
+      <li className="item" draggable="true" onDragStart={this.dragStartHandler} onDrop={this.dropHandler}>
         <p>{this.props.weight}    {this.props.text}</p>
       </li>
     );
@@ -66,7 +64,7 @@ var ProsAndCons = React.createClass({
   },
   render: function() {
     return (
-      <div className="">
+      <div>
         <Form onItemSubmit={this.handleItemSubmit}/>
         <List data={this.state.data}/>
       </div>
@@ -75,16 +73,38 @@ var ProsAndCons = React.createClass({
 });
 
 var List = React.createClass({
-  onDrop: function(e) { 
+  dragEnterHandler: function(e) {
+    console.log("Entered " + e.target.id);
+  },
+  dragOverHandler: function(e) {
     e.preventDefault();
-    e.target.appendChild(dragging);
+    // dragging over this category
+    console.log("Dragging over " + e.target.id);
+    return false;
+  }, 
+  dragLeaveHandler: function(e) {
+    // This doesn't work quite right
+    // console.log("Left " + e.target.id);
+
+    // Remove from list
+  },
+  dropHandler: function(e) {
+    console.log("Drop" + e);
+    // e.preventDefault();
+    // Set title
+    // Set description
+    // Set weight
+    // Set category
+    // Set index
+    // Set Id
+    // Set dragImage
   },
   render: function() {
   	var pros = [];
   	var cons = [];
   	var uncategorized = [];
 		this.props.data.forEach(function(item) {
-			var singleItem = 
+      var singleItem = 
           <Item 
         		key={item.id}
             category={item.category}
@@ -103,18 +123,30 @@ var List = React.createClass({
     });
     return (
       <div>
-        <ul id="pros-list" className="item-list">
+        <div className="item-list">
           <h3 id="pro-header">Pro</h3>
-          {pros}
-        </ul>
-        <ul id="cons-list" className="item-list">
-          <h3 id="pro-header">Pro</h3>
-          {cons}
-        </ul>
-        <ul id="uncategorized-list" className="item-list">
-          <h3 id="pro-header">Pro</h3>
-          {uncategorized}
-        </ul>
+          <ul id="pros-list" 
+            onDragEnter={this.dragEnterHandler} onDragOver={this.dragOverHandler}
+            onDragLeave={this.dragLeaveHandler} onDrop={this.dropHandler}>
+            {pros}
+          </ul>
+        </div>
+        <div className="item-list">
+          <h3 id="con-header">Con</h3>
+          <ul id="cons-list"
+            onDragEnter={this.dragEnterHandler} onDragOver={this.dragOverHandler}
+            onDragLeave={this.dragLeaveHandler} onDrop={this.dropHandler}>
+            {cons}
+          </ul>
+        </div>
+        <div className="item-list">
+          <h3 id="uncategorized-header">Uncategorized</h3>
+          <ul id="uncategorized-list"
+            onDragEnter={this.dragEnterHandler} onDragOver={this.dragOverHandler}
+            onDragLeave={this.dragLeaveHandler} onDrop={this.dropHandler}>
+            {uncategorized}
+          </ul>
+        </div>
       </div>
     );
   }
@@ -125,7 +157,7 @@ var Form = React.createClass({
     return {category: '', author: '', text: '', weight: 0};
   },
   handleCategoryChange: function(e) {
-  	this.setState({category: e.target.value});
+  	this.setState({category: e.target.vgalue});
   },
   handleAuthorChange: function(e) {
     this.setState({author: e.target.value});
